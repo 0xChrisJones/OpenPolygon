@@ -37,9 +37,9 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
     address owner
   );
 
-  event MarketItemBurnt {
+  event MarketItemBurnt (
     uint256 tokenId
-  }
+  );
 
   constructor() ERC721("OpenPolygon Tokens", "OPT") {  
     owner = payable(msg.sender);
