@@ -6,8 +6,6 @@ import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721UR
 import "../node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 
-import "../node_modules/hardhat/console.sol";
-
 contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
@@ -118,7 +116,7 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
     _tokensSold.decrement();
   }
 
-  function delistItem(uint256 tokenID) public {
+  function delistItem(uint256 tokenID) public nonReentrant {
     require(idToToken[tokenID].owner == msg.sender, "Only owner of the item can resell it.");
     require(idToToken[tokenID].sold == false, "Only listed items can be unlisted.");
 
