@@ -1,10 +1,10 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "../node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
   using Counters for Counters.Counter;
@@ -117,7 +117,7 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
   }
 
   function delistItem(uint256 tokenID) public nonReentrant {
-    require(idToToken[tokenID].owner == msg.sender, "Only owner of the item can resell it.");
+    require(idToToken[tokenID].seller == payable(msg.sender), "Only owner of the item can delist it.");
     require(idToToken[tokenID].sold == false, "Only listed items can be unlisted.");
 
     _transfer(address(this), msg.sender, tokenID);
@@ -125,11 +125,10 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
     idToToken[tokenID].sold = true;
     idToToken[tokenID].seller = payable(address(0));
     idToToken[tokenID].owner = payable(msg.sender);
-    _tokensSold.decrement();
   }
 
   function burnItem(uint256 tokenID) public {
-    require(idToToken[tokenID].owner == msg.sender, "Only owner of the item can resell it.");
+    require(idToToken[tokenID].owner == payable(msg.sender), "Only owner of the item can burn it.");
     require(idToToken[tokenID].sold == true, "Only not listed items can be burnt.");
 
     _burn(tokenID);
