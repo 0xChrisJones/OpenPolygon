@@ -6,9 +6,10 @@ interface IOpenPolygonContext {
   connectWallet: () => void;
 }
 
-export const OpenPolygonContext = React.createContext<
-  Partial<IOpenPolygonContext>
->({});
+export const OpenPolygonContext = React.createContext<IOpenPolygonContext>({
+  account: '',
+  connectWallet: () => {},
+});
 
 export const OpenPolygonProvider: React.FC = ({ children }) => {
   const [account, setAccount] = useState('');
